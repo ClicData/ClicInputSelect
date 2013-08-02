@@ -1,0 +1,100 @@
+/* Style of the full control */
+.clicInputSelect
+{
+	display: inline-block; 		/* Do not modify */
+	box-sizing: border-box; 	/* Do not modify */ 
+	position: relative;			/* Do not modify */
+	border: 1px solid #c4c4c4;	/* Default style */
+	margin-bottom: 10px;		/* Default style */
+	border-radius: 5px;			/* Default style */
+	padding:2px;
+}
+
+/* Style of the inner INPUT element */
+.clicInputSelectInput
+{
+	outline: none;			/* Do not modify */
+	border:0;				/* Do not modify */
+	margin-right:  0px;    /* Modify with .clicInputSelectButton width */
+	height: 26px;			/* Default style */
+	font:15px arial,sans-serif;		/* Default style */
+}
+
+.clicInputSelectInput::-ms-clear {
+    display: none;			/* Do not modify */
+}
+
+.clicInputSelectInput.noButton
+{
+	margin-right: 0;		/* Do not modify */
+}
+
+.clicInputSelectButton
+{
+	position: absolute;			/* Do not modify */
+	right:0;					/* Do not modify */
+	top:0;						/* Do not modify */	
+	bottom: 0;					/* Do not modify */
+	width: 25px; 				/* Modify with .clicInputSelectInput margin-right */
+	background-color: #fff;		/* Default style */
+	text-align: center;			/* Default style */
+	cursor: pointer;			/* Default style */
+	color: #666;				/* Default style */
+	border-radius: 0 5px 5px 0;	/* Default style */
+}
+
+.clicInputSelectButton:hover
+{
+	background: #444;			/* Default style */
+	color: #fff;				/* Default style */
+}
+
+
+
+.clicInputSelectPanel
+{
+	background: rgba(255,255,255,1);
+	border: 1px solid #c4c4c4;
+	height: 200px;
+	padding:0;
+	overflow: auto;
+	box-sizing: border-box;
+	border-radius: 5px;	/* Default style */
+}
+
+
+.clicInputSelectPanel ul
+{
+	padding:0;				/* Do not modify */
+	margin:0;				/* Do not modify */
+}
+
+.clicInputSelectPanel li
+{
+	margin:0;						/* Do not modify */
+	cursor: pointer;				/* Do not modify */
+	font:15px arial,sans-serif;		/* Default style */
+	padding:3px;					/* Default style */
+	line-height: 18px;				/* Default style */
+	margin: 3px;					/* Default style */
+	border-radius: 2px;				/* Default style */
+}
+
+.clicInputSelectPanel li:hover{
+	color: #fff;					/* Default style */
+	background: #607696;			/* Default style */
+}
+
+.clicInputSelectPanel li.selected{
+	color: cyan;					 
+	background: red;				
+}
+
+.clicInputHighlightSearch{
+	color: #000;					/* Default style */
+	background: #EDEEAA;			/* Default style */
+}
+
+
+
+
