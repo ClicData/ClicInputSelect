@@ -53,13 +53,13 @@
 
 .clicInputSelectPanel
 {
-	background: rgba(255,255,255,1);
-	border: 1px solid #c4c4c4;
-	height: 200px;
-	padding:0;
-	overflow: auto;
-	box-sizing: border-box;
-	border-radius: 5px;	/* Default style */
+	overflow: auto;						/* Do not modify */
+	background: rgba(255,255,255,1);	/* Default style */
+	border: 1px solid #c4c4c4;			/* Default style */
+	padding:0;							/* Default style */
+	box-sizing: border-box;				/* Default style */
+	border-radius: 5px;					/* Default style */
+	box-shadow: 0 0 3px rgba(0,0,0,0.4);/* Default style */
 }
 
 
@@ -67,6 +67,7 @@
 {
 	padding:0;				/* Do not modify */
 	margin:0;				/* Do not modify */
+	width: 100%;
 }
 
 .clicInputSelectPanel li
@@ -83,11 +84,6 @@
 .clicInputSelectPanel li:hover{
 	color: #fff;					/* Default style */
 	background: #607696;			/* Default style */
-}
-
-.clicInputSelectPanel li.selected{
-	color: cyan;					 
-	background: red;				
 }
 
 .clicInputHighlightSearch{
