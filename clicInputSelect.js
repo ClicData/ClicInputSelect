@@ -14,6 +14,7 @@
     var el = element;
     var $el = $(element);
 	var _selectedItem;
+	var _selectedIndex;
 	
     // Extend default options with those supplied by user.
     options = $.extend({}, $.fn[pluginName].defaults, options);
@@ -38,14 +39,7 @@
 			$el.css("top","");
 			$el.css("bottom","");
 		}
-		
 		$el.wrap(tContainer);
-		//$el.wrap('<div class="clicInputSelect"/>');
-		
-		// Copy position type css attributes to container and remove them from input
-
-		//$el.css("position", "");
-		//$el.css("float", "");
 		
 		// If emptyText provided then set emptyText
 		$el.attr("placeholder", options.emptyText);
@@ -53,7 +47,7 @@
 		// If button displayed then add button element with awesome font icon
 		if(options.buttonDisplay){
 			tDropdownButton = $('<div class="clicInputSelectButton"/>');
-			tDropdownButton.on("click",clicInputSelectButtonClick);
+			tDropdownButton.on("mousedown",clicInputSelectButtonClick);
 			$el.after(tDropdownButton);
 			// Only sure fire way of vertically centering the icon in button is code.  All others fail (vertical-align, flex, line-height: 100%, etc...)
 			tDropdownButton.append('<i class="' + options.buttonIconOpenClass + '" style="line-height: ' + tDropdownButton.height() + 'px;"></i>');
@@ -64,13 +58,12 @@
 		}
 
 		// Initialize state of panel
-		$el.data("clicInputSelectPanelOpen", false)
-
+		$el.data("clicInputSelectPanelOpen", false);
 		
 		// Add events
 		$el.on("keyup", inputKeyUp);
 		$el.on("keydown", inputKeyDown);
- 
+		$el.on("click", inputClick);
  
 		hook('onInit');
     }
@@ -102,7 +95,7 @@
 			// If the dropdown panel is open for the current element then just review # of character typed
 			// and close if less than minimum, filter list if minimum characters is ok
 			if ($el.data("clicInputSelectPanelOpen")){
-				if (tValue.length > options.minNumberChars)
+				if (tValue.length >= options.minNumberChars)
 				{
 					filterList(tValue);
 				}
@@ -118,12 +111,27 @@
 				
 				// If content is greater than minimum number of characters option then display select list with filtered options
 				
-				if (tValue.length > options.minNumberChars)
+				if (tValue.length >= options.minNumberChars)
 				{
 					openDropdownPanel(el, tValue);
 				}
 			}
 			hook('onInputChange', tValue);
+		}
+	}
+	
+	// ----------------------------------------------------------------------------------------
+	// Behaviours when user clicks on input  
+	// ----------------------------------------------------------------------------------------
+	function inputClick(){
+		// Select text 
+		if(options.selectTextOnFocus){
+			el.select();
+		}
+
+		// Open dropdown
+		if(options.openDropdownOnFocus){
+			 openDropdownPanel(el);
 		}
 	}
 	
@@ -140,6 +148,8 @@
 			// Switch button icon  
 			$el.next().children("i").removeClass(options.buttonIconCloseClass);
 			$el.next().children("i").addClass(options.buttonIconOpenClass);
+			
+			hook('onListClose');
 		}
 		else
 		{
@@ -149,6 +159,8 @@
 			// Open panel for clicked on element
 			openDropdownPanel(el);
 		}
+		
+		return false;
 	}
 
 	// ----------------------------------------------------------------------------------------
@@ -186,17 +198,9 @@
 		// Display panel below input
 	    var tPosition = $el.parent().offset();
 		
-		// Width for drop down panel is either auto, default or a specific value 
-		var tWidth = "";
-		switch(options.dropdownPanelWidth)
-		{
-		case "auto":
-		  tWidth = "100%";
-		  break;
-		case "default":
-		   tWidth = $el.parent().outerWidth();
-		  break;
-		default:
+		// Width for drop down panel is default (same as input) or overriden fixed
+		var tWidth = $el.parent().outerWidth();
+		if(options.dropdownPanelWidth){
 			tWidth = options.dropdownPanelWidth;
 		}
 		
@@ -205,6 +209,9 @@
 		
 		// Create dropdown panel and UL
 		tPanel = $('<div class="clicInputSelectPanel" />');
+		
+		// Height of dropdown 
+		tPanel.height(options.dropdownPanelHeight);
 		tList = $("<ul/>");
 		
 		// Is this array or array of objects?
@@ -213,9 +220,19 @@
 			// If an object/json array then setup with and without template, 
 			var tDisplayItem;
 			if( typeof options.dataSource[0] === 'object' ) {
+				// Store value in data-value
+				if(options.dataSourceValueProperty){
+					tValueItem = function(value){return "data-value='" + value[options.dataSourceValueProperty] + "'"};
+				}
+				else
+				{
+					tValueItem = function(value){return ""};
+				}
+				
+				// Get display item (templated or not)
 				if(options.itemTemplate == null)
 				{
-					tDisplayItem = function(value){return value[options.displayDataSourceProperty]};
+					tDisplayItem = function(value){return value[options.dataSourceDisplayProperty]};
 				} else {
 					tDisplayItem = function(value){return options.itemTemplate(value)};
 				}
@@ -223,11 +240,22 @@
 			else   // If string/value array then just return array value
 			{			
 				tDisplayItem = function(value) {return value};
+				tValueItem = function(value){return ""};
 			}
 			
+			var tOverrideStyle = "";
+			if(options.itemOverflow){ 
+				if(options.itemOverflow == "nowrap"){
+						tOverrideStyle = "style='white-space:nowrap;'";
+				}
+				else if(options.itemOverflow == "nowraptrim")
+				{
+					tOverrideStyle = "style='white-space:nowrap; overflow:hidden; text-overflow: ellipsis;'";
+				}
+			}
 
 			 $.each( options.dataSource, function( index, value ) {
-				 tList.append("<li data-index='" + index + "'>" + tDisplayItem(value) + "</li>");
+				 tList.append("<li data-index='" + index + "' " + tOverrideStyle + " " + tValueItem(value) + ">" + tDisplayItem(value) + "</li>");
 			 });
 
 		}	
@@ -244,11 +272,12 @@
 		// Set event handler on LI items;
 		$(".clicInputSelectPanel").on("click","li", selectItem);
 		
+		// If filter is to be applied
 		if(pApplyFilter){
 			filterList(pApplyFilter);
 		}
 		
-		hook('onListOpen');
+		hook('onListOpen', tPanel);
 	}
 	
  	// ----------------------------------------------------------------------------------------
@@ -256,24 +285,40 @@
 	// ----------------------------------------------------------------------------------------
 	function filterList(pFilter)
 	{
+		if(!pFilter){
+			closeAllDropdownPanels();	
+		}
+		
+		// If Filter is case insensitive then lowercase everything
 		if(!options.filterCaseSensitive){
 			pFilter = pFilter.toLowerCase();
+		}
+		
+		// Set function for starts or contains
+		var tMatchString;
+		if(options.filterMethod == "startswith") {
+			tMatchString = function(index){return index == 0};
+		}
+		else
+		{
+			tMatchString = function(index){return index >= 0};
 		}
 		
 		var tItemMatch = false;
 		var tFoundAt;
 		$(".clicInputSelectPanel ul > li").each(function() {
 			tItemMatch = false;
+			
 			if(options.filterCaseSensitive){
-				tFoundAt =$(this).text().search(pFilter);
-				if (tFoundAt> -1) {
+				tFoundAt = $(this).text().search(pFilter);
+				if (tMatchString(tFoundAt)) {
 					tItemMatch = true;
 				}
 			}
 			else
 			{
 				tFoundAt = $(this).text().toLowerCase().search(pFilter);
-				if (tFoundAt > -1) {
+				if (tMatchString(tFoundAt)) {
 					tItemMatch = true;
 				}
 			}
@@ -285,7 +330,7 @@
 				// if highlight class is given then apply it to part of string found
 				// Highlighting of words can not be used with templated items as it could screw up html
 				if(options.itemTemplate == null){
-					if(options.filterHighlightClass && pFilter.length != 0){
+					if(options.filterHighlightMatches && pFilter.length != 0){
 						var tStringPattern = $(this).text().substr(tFoundAt, pFilter.length);
 						$(this).html($(this).text().replace(tStringPattern,"<span class='" + options.filterHighlightClass + "'>" + tStringPattern + "</span>"));
 					}
@@ -295,8 +340,9 @@
 				$(this).hide();
 			}
 		});
+		
+
 	}
-	
 	
 	// ----------------------------------------------------------------------------------------
 	// Select list item
@@ -304,7 +350,9 @@
 	function selectItem(event)
 	{
 		// Get item selected
-		_selectedItem = options.dataSource[$(event.target).data("index")];
+		_selectedIndex = $(event.target).data("index");
+		_selectedItem = options.dataSource[_selectedIndex];
+		
 		hook('onItemSelected', _selectedItem);
 		
 		$el.val($(event.target).text());
@@ -316,23 +364,63 @@
 		hook('onListClose');
 	}
 
-	
+	function selectItembyIndex(pIndex){
+		// Get item selected
+		_selectedIndex = pIndex;
+		_selectedItem = options.dataSource[pIndex];
+		$el.val(_selectedItem[options.dataSourceDisplayProperty]);
+		hook('onItemSelected', _selectedItem);
+	}
 
+	function selectItembyValue(pValue){
+		$.each(options.dataSource, function(index, value) {
+			if(value[options.dataSourceValueProperty] == pValue)
+			{
+				// Get item selected
+				_selectedIndex = index;
+				_selectedItem = options.dataSource[index];
+				$el.val(_selectedItem[options.dataSourceDisplayProperty]);
+				hook('onItemSelected', _selectedItem);
+				return false;
+			}
+		});
+	}
+
+	function selectItembyDisplay(pDisplayText){
+		$.each(options.dataSource, function(index, value) {
+			if(value[options.dataSourceDisplayProperty] == pDisplayText)
+			{
+				// Get item selected
+				_selectedIndex = index;
+				_selectedItem = options.dataSource[index];
+				$el.val(_selectedItem[options.dataSourceDisplayProperty]);
+				hook('onItemSelected', _selectedItem);
+				return false;
+			}
+		});
+	}
 	
  	// ----------------------------------------------------------------------------------------
 	// Close all dropdown if clicked anywhere but on the dropdown element or input element
 	// ----------------------------------------------------------------------------------------
-	 $(document).mouseup(function (e)
+	$(document).mouseup(function (e)
 	{
 		// Ignore if mouseup on clicInputSelect element or children (let normal events take over)
 		var tInputContainer = $(".clicInputSelect");
-		if (!tInputContainer.is(e.target) // if the target of the click isn't the clicInputSelect
-			&& tInputContainer.has(e.target).length === 0) // ... nor a descendant of clicInputSelect
-		{
+		 if (!tInputContainer.is(e.target) // if the target of the click isn't the clicInputSelect
+			 && tInputContainer.has(e.target).length === 0) // ... nor a descendant of clicInputSelect
+		 {
 			var tDropDownPanel = $(".clicInputSelectPanel");
 			if (!tDropDownPanel.is(e.target) // if the target of the click isn't the dropdown panel...
 			&& tDropDownPanel.has(e.target).length === 0) // ... nor a descendant of dropdown panel
 			{
+				closeAllDropdownPanels();
+			}
+		}
+		
+		// Also close drop down if user clicked on another input element of clicInputSelect type
+		if($(e.target).hasClass("clicInputSelectInput")){
+			if($(e.target).data("clicInputSelectPanelOpen") === false){
 				closeAllDropdownPanels();
 			}
 		}
@@ -350,20 +438,38 @@
         return options[key];
       }
     }
- 
-    /**
-     * Destroy plugin.
-     * Usage: $('#el').demoplugin('destroy');
-     */
+	
+	// ----------------------------------------------------------------------------------------
+	// Return input to its original state remove all clicInputSelect
+	// ----------------------------------------------------------------------------------------
     function destroy() {
       // Iterate over each matching element.
       $el.each(function() {
         var el = this;
         var $el = $(this);
  
-        // Add code to restore the element to its original state...
+        // Remove container, dropdown button,, etc.
+		$el.removeClass("clicInputSelectInput");
+
+		// If positioning absolute/relative then copy it back to input element
+		if($el.parent().css("position") == "absolute" || $el.parent().css("position") == "relative") {
+			$el.css("position",$el.parent().css("position"));
+			$el.css("top",	$el.parent().css("top")?$el.parent().css("top"):"");
+			$el.css("bottom", $el.parent().css("bottom")?$el.parent().css("bottom"):"");
+			$el.css("left",	$el.parent().css("left")?$el.parent().css("left"):"");
+			$el.css("right",	$el.parent().css("right")?$el.parent().css("right"):"");
+		}
+		$el.unwrap();
+		
+		// Remove events on input
+		$el.off("keyup", inputKeyUp);
+		$el.off("keydown", inputKeyDown);
+		
+		// If emptyText provided then set emptyText
+		//$el.attr("placeholder", options.emptyText);
  
         hook('onDestroy');
+		
         // Remove Plugin instance from the element.
         $el.removeData(pluginName);
       });
@@ -392,7 +498,10 @@
       option: option,
       destroy: destroy,
 	  openlist: openDropdownPanel,
-	  closelist: closeAllDropdownPanels
+	  closelist: closeAllDropdownPanels,
+	  selectitembyindex: selectItembyIndex,
+  	  selectitembyvalue: selectItembyValue,
+	  selectitembydisplay: selectItembyDisplay	  
     };
   }
  
@@ -443,21 +552,26 @@
   // passing an object literal, or after initialization:
   // $('#el').demoplugin('option', 'key', value);
   $.fn[pluginName].defaults = {
-		minNumberChars: 0,
-		buttonDisplay: true,
+		minNumberChars: 0,									// Minimum number of characters required to display auto suggestion dropdown
+		buttonDisplay: true,								// Default is to display dropdown button
 		buttonIconOpenClass: 'icon-chevron-down',
 		buttonIconCloseClass: 'icon-chevron-up',
 		dataSource: [],
+		dataSourceDisplayProperty: null,
+		dataSourceValueProperty: null,
 		positionOffsetX: 0,
-		positionOffsetY: 2,
-		itemTemplate: null,
-		emptyText:null,
-		displayDataSourceProperty: 'name',
-		filterMethod: 'any',	// "any" part of the string, "begins" with part of the string
-		filterCaseSensitive: false, 
-		filterHighlightClass: 'clicInputHighlightSearch',  // Leave blank for no highlighting
-		dropdownPanelWidth: "default",    // "default" for same size as input, "auto" for automatic 100% width of largest item, "#px" for fixed width
-		maxDropdownPanelHeight: null,
+		positionOffsetY: 2,									
+		selectTextOnFocus: false,							// If user selects input then text (if any) will be highlighted
+		openDropdownOnFocus: false,							// If user selects input dropdown is opened at the same time
+		itemTemplate: null,				
+		emptyText:null,										// text in here will be displayed as a placeholder (i.e. please select...)
+		itemOverflow: null,									// Default is null (wrap text), "nowrap" no wrap with scrollbar, "nowraptrim" no wrap and no scrollbar
+		filterMethod: 'contains',							// "contains" part of the string, "startswith" with part of the string
+		filterCaseSensitive: false, 						// Is case sensitive , default is no
+		filterHighlightMatches: true,						// Default is that highlight match characters is on
+		filterHighlightClass: 'clicInputHighlightSearch',  	// Override this or leave default 'clicInputHighlightSearch"
+		dropdownPanelWidth: null,    						// Leave null for same size as input otherwise put fixed or % size as in "200px" or "100%"
+		dropdownPanelHeight: "200px",   					// default is 200px
 		onInit: function() {},
 		onDestroy: function() {}
   };

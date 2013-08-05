@@ -15,9 +15,10 @@
 {
 	outline: none;			/* Do not modify */
 	border:0;				/* Do not modify */
-	margin-right:  0px;    /* Modify with .clicInputSelectButton width */
-	height: 26px;			/* Default style */
+	margin-right:  25px;    /* Modify with .clicInputSelectButton width */
+	height: 100%;           /* Do not modify */ 
 	font:15px arial,sans-serif;		/* Default style */
+	
 }
 
 .clicInputSelectInput::-ms-clear {
@@ -53,13 +54,13 @@
 
 .clicInputSelectPanel
 {
-	background: rgba(255,255,255,1);
-	border: 1px solid #c4c4c4;
-	height: 200px;
-	padding:0;
-	overflow: auto;
-	box-sizing: border-box;
-	border-radius: 5px;	/* Default style */
+	overflow: auto;						/* Do not modify */
+	background: rgba(255,255,255,1);	/* Default style */
+	border: 1px solid #c4c4c4;			/* Default style */
+	padding:0;							/* Default style */
+	box-sizing: border-box;				/* Default style */
+	border-radius: 5px;					/* Default style */
+	box-shadow: 0 0 3px rgba(0,0,0,0.4);/* Default style */
 }
 
 
@@ -67,6 +68,7 @@
 {
 	padding:0;				/* Do not modify */
 	margin:0;				/* Do not modify */
+	width: 100%;
 }
 
 .clicInputSelectPanel li
@@ -85,16 +87,7 @@
 	background: #607696;			/* Default style */
 }
 
-.clicInputSelectPanel li.selected{
-	color: cyan;					 
-	background: red;				
-}
-
 .clicInputHighlightSearch{
 	color: #000;					/* Default style */
 	background: #EDEEAA;			/* Default style */
 }
-
-
-
-
