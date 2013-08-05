@@ -44,12 +44,23 @@
 	border-radius: 0 5px 5px 0;	/* Default style */
 }
 
-.clicInputSelectButton:hover
+.clicInputSelectButton:hover:not(.disabled)
 {
 	background: #444;			/* Default style */
 	color: #fff;				/* Default style */
 }
 
+.clicInputSelectButton.disabled{
+	background: #d4d4d4;		/* Default style */
+	color: #444;				/* Default style */
+}
+.clicInputSelect.disabled{
+	background: #d4d4d4;		/* Default style */
+}
+.clicInputSelectInput.disabled{
+	background: #d4d4d4;		/* Default style */
+	color: #888;				/* Default style */
+}
 
 
 .clicInputSelectPanel
@@ -62,7 +73,6 @@
 	border-radius: 5px;					/* Default style */
 	box-shadow: 0 0 3px rgba(0,0,0,0.4);/* Default style */
 }
-
 
 .clicInputSelectPanel ul
 {

@@ -14,7 +14,7 @@
     var el = element;
     var $el = $(element);
 	var _selectedItem;
-	var _selectedIndex;
+	var _selectedItemIndex;
 	
     // Extend default options with those supplied by user.
     options = $.extend({}, $.fn[pluginName].defaults, options);
@@ -40,14 +40,16 @@
 			$el.css("bottom","");
 		}
 		$el.wrap(tContainer);
-		
+				
 		// If emptyText provided then set emptyText
 		$el.attr("placeholder", options.emptyText);
 		
 		// If button displayed then add button element with awesome font icon
 		if(options.buttonDisplay){
 			tDropdownButton = $('<div class="clicInputSelectButton"/>');
-			tDropdownButton.on("mousedown",clicInputSelectButtonClick);
+			if(!options.readonly){
+				tDropdownButton.on("mousedown",clicInputSelectButtonClick);
+			}
 			$el.after(tDropdownButton);
 			// Only sure fire way of vertically centering the icon in button is code.  All others fail (vertical-align, flex, line-height: 100%, etc...)
 			tDropdownButton.append('<i class="' + options.buttonIconOpenClass + '" style="line-height: ' + tDropdownButton.height() + 'px;"></i>');
@@ -60,10 +62,16 @@
 		// Initialize state of panel
 		$el.data("clicInputSelectPanelOpen", false);
 		
-		// Add events
-		$el.on("keyup", inputKeyUp);
-		$el.on("keydown", inputKeyDown);
-		$el.on("click", inputClick);
+		// If read only then make input read only and no events
+		if(options.readonly){
+			$el.attr("readonly","readonly");
+		}
+		else
+		{
+			$el.on("keyup", inputKeyUp);
+			$el.on("keydown", inputKeyDown);
+			$el.on("click", inputClick);
+		}
  
 		hook('onInit');
     }
@@ -349,12 +357,12 @@
 	// ----------------------------------------------------------------------------------------
 	function selectItem(event)
 	{
-		// Get item selected
-		_selectedIndex = $(event.target).data("index");
-		_selectedItem = options.dataSource[_selectedIndex];
+		// Save item selected
+		_selectedItemIndex = $(event.target).data("index");
+		_selectedItem = options.dataSource[_selectedItemIndex];
+		hook('onItemSelected', _selectedItem);;
 		
-		hook('onItemSelected', _selectedItem);
-		
+		// Set value in input and close panel
 		$el.val($(event.target).text());
 		$el.data("clicInputSelectPanelOpen",false);
 		$(".clicInputSelectPanel").remove();
@@ -364,20 +372,26 @@
 		hook('onListClose');
 	}
 
+	// ----------------------------------------------------------------------------------------
+	// Select item by index
+	// ----------------------------------------------------------------------------------------
 	function selectItembyIndex(pIndex){
 		// Get item selected
-		_selectedIndex = pIndex;
+		_selectedItemIndex = pIndex;
 		_selectedItem = options.dataSource[pIndex];
 		$el.val(_selectedItem[options.dataSourceDisplayProperty]);
-		hook('onItemSelected', _selectedItem);
+		hook('onItemSelected', _selectedItem);;
 	}
 
+	// ----------------------------------------------------------------------------------------
+	// Select item by value
+	// ----------------------------------------------------------------------------------------
 	function selectItembyValue(pValue){
 		$.each(options.dataSource, function(index, value) {
 			if(value[options.dataSourceValueProperty] == pValue)
 			{
 				// Get item selected
-				_selectedIndex = index;
+				_selectedItemIndex = index;
 				_selectedItem = options.dataSource[index];
 				$el.val(_selectedItem[options.dataSourceDisplayProperty]);
 				hook('onItemSelected', _selectedItem);
@@ -386,18 +400,99 @@
 		});
 	}
 
+	// ----------------------------------------------------------------------------------------
+	// Select item by display value
+	// ----------------------------------------------------------------------------------------
 	function selectItembyDisplay(pDisplayText){
 		$.each(options.dataSource, function(index, value) {
 			if(value[options.dataSourceDisplayProperty] == pDisplayText)
 			{
 				// Get item selected
-				_selectedIndex = index;
+				_selectedItemIndex = index;
 				_selectedItem = options.dataSource[index];
 				$el.val(_selectedItem[options.dataSourceDisplayProperty]);
 				hook('onItemSelected', _selectedItem);
 				return false;
 			}
 		});
+	}
+
+	// ----------------------------------------------------------------------------------------
+	// Make read only or not
+	// ----------------------------------------------------------------------------------------
+	function readOnly(pOn){
+		if(pOn){
+			$el.attr("readonly","readonly");
+			$el.next().off("mousedown",clicInputSelectButtonClick);
+			$el.off("keyup", inputKeyUp);
+			$el.off("keydown", inputKeyDown);
+			$el.off("click", inputClick);
+		}
+		else
+		{
+			$el.removeAttr("readonly","");
+			$el.next().on("mousedown",clicInputSelectButtonClick);
+			$el.on("keyup", inputKeyUp);
+			$el.on("keydown", inputKeyDown);
+			$el.on("click", inputClick);
+
+		}
+	}
+
+		// ----------------------------------------------------------------------------------------
+	// Make read only or not
+	// ----------------------------------------------------------------------------------------
+	function enable(pOn){
+		if(pOn){
+			$el.removeClass("disabled");
+			$el.parent().removeClass("disabled");		
+			$el.next().removeClass("disabled");
+			$el.removeAttr("readonly","");
+			$el.next().on("mousedown",clicInputSelectButtonClick);
+			$el.on("keyup", inputKeyUp);
+			$el.on("keydown", inputKeyDown);
+			$el.on("click", inputClick);
+		}
+		else
+		{	
+			$el.addClass("disabled");
+			$el.parent().addClass("disabled");		
+			$el.next().addClass("disabled");
+			$el.attr("readonly","readonly");
+			$el.next().off("mousedown",clicInputSelectButtonClick);
+			$el.off("keyup", inputKeyUp);
+			$el.off("keydown", inputKeyDown);
+			$el.off("click", inputClick);
+
+		}
+	}
+	
+	// ----------------------------------------------------------------------------------------
+	// get selected item index
+	// ----------------------------------------------------------------------------------------
+	function getSelectedItemIndex(){
+		return _selectedItemIndex;
+	}
+
+	// ----------------------------------------------------------------------------------------
+	// get selected item display
+	// ----------------------------------------------------------------------------------------
+	function getSelectedItemDisplay(){
+		return _selectedItem[options.dataSourceDisplayProperty];
+	}
+
+	// ----------------------------------------------------------------------------------------
+	// get selected item value
+	// ----------------------------------------------------------------------------------------
+	function getSelectedItemValue(){
+		return _selectedItem[options.dataSourceValueProperty];
+	}
+
+	// ----------------------------------------------------------------------------------------
+	// get selected item object
+	// ----------------------------------------------------------------------------------------
+	function getSelectedItem(){
+		return _selectedItem;
 	}
 	
  	// ----------------------------------------------------------------------------------------
@@ -501,7 +596,13 @@
 	  closelist: closeAllDropdownPanels,
 	  selectitembyindex: selectItembyIndex,
   	  selectitembyvalue: selectItembyValue,
-	  selectitembydisplay: selectItembyDisplay	  
+	  selectitembydisplay: selectItembyDisplay,
+	  getselecteditemindex: getSelectedItemIndex,
+      getselecteditemvalue: getSelectedItemValue,
+      getselecteditemdisplay: getSelectedItemDisplay, 
+	  getselecteditem: getSelectedItem,
+	  readonly: readOnly,
+	  enable: enable
     };
   }
  
@@ -563,6 +664,7 @@
 		positionOffsetY: 2,									
 		selectTextOnFocus: false,							// If user selects input then text (if any) will be highlighted
 		openDropdownOnFocus: false,							// If user selects input dropdown is opened at the same time
+		readonly: false,
 		itemTemplate: null,				
 		emptyText:null,										// text in here will be displayed as a placeholder (i.e. please select...)
 		itemOverflow: null,									// Default is null (wrap text), "nowrap" no wrap with scrollbar, "nowraptrim" no wrap and no scrollbar

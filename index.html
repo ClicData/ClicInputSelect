@@ -273,6 +273,8 @@
 		 $("#b6").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", dropdownPanelWidth: "100%"});
 		 $("#b7").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", dropdownPanelHeight: "100px"});
 		 $("#b8").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", positionOffsetY: -32, positionOffsetX:280});
+		 $("#b9").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name"});
+		 $("#b10").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", readonly: true});
 		 
 		 $("#c1").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", buttonIconOpenClass:'icon-sun', buttonIconCloseClass:'icon-moon'});
 		 $("#c3").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name"});
@@ -342,6 +344,22 @@
 	 $("#maxNumberChars").on("change",function(){		 
 		$("#f1").clicInputSelect("option","minNumberChars", $("#maxNumberChars").val());
 	 });
+	 
+	 function ShowDisplay(){
+		alert($("#methods").data("clicInputSelect").getselecteditemdisplay());
+	 }
+	 
+	 function ShowValue(){
+		alert($("#methods").data("clicInputSelect").getselecteditemvalue());
+	 }
+	 
+	 function ShowItem(){
+		alert($("#methods").data("clicInputSelect").getselecteditem());
+	 }
+	 
+	 function ShowIndex(){
+		alert($("#methods").data("clicInputSelect").getselecteditemindex());
+	 }
   </script>
   
   
@@ -380,8 +398,6 @@
 	<ul>
 	<li>Add custom class for ClicInputSelect and ClicInputPanel and dropdown button</li>
 	<li>Keyboard management</li>
-	<li>Get value, set value are done just sample page examples</li>
-	<li>Enable/disable/readonly</li>
 	<li></li>
 	
 	</ul>
@@ -399,17 +415,19 @@
 	No button <input type="text" style="width: 250px" id="b1"/> <br />
 	Templated items <input type="text" style="width: 400px" id="b2"/> <br />
 	Placeholder text <input type="text" style="width: 250px" id="b3"/> <br />
-	Width and Height of input <input type="text" style="width: 250px; height: 10px;" id="b4"/> <br />
-	Dropdown Panel Width to fixed size <input type="text" style="width: 250px; height: 40px;" id="b5"/> <br />
-	Dropdown Panel Width to 100% size <input type="text" style="width: 250px; font-size: 24px;" id="b6"/> <br />
-	Dropdown Panel Height to fixed size <input type="text" style="width: 250px; font-size: 24px;" id="b7"/> <br />
+	Width and Height of input <input type="text" style="width: 450px; height: 40px;" id="b4"/> <br />
+	Dropdown Panel Width to fixed size <input type="text" style="width: 250px;" id="b5"/> <br />
+	Dropdown Panel Width to 100% size <input type="text" style="width: 250px; " id="b6"/> <br />
+	Dropdown Panel Height to fixed size <input type="text" style="width: 250px;" id="b7"/> <br />
 	Dropdown panel offset <input type="text" style="width: 250px" id="b8"/> <br />
+	Input font size <input type="text" style="width: 250px; font-size: 32px;" id="b9"/> <br />
+	Read only <input type="text" style="width: 250px" value="Canada" id="b10"/> <br />
 	<hr>
 	Default item text overflow behaviour (wrap) <input type="text" style="width: 90px" id="w1"/> <br />
 	Don't wrap item text add scrollbar <input type="text" style="width: 90px" id="w2"/> <span style="color: red">Bug: Hover selection is cut off</span><br />
 	Don't wrap item text no scrollbar/truncate text  <input type="text" style="width: 90px" id="w3"/> <br />
 	<hr>
-	Override button classes<input type="text" style="width: 250px" id="c1"/> <br />
+	Override button classes <input type="text" style="width: 250px" id="c1"/> <br />
 	Override button class <input type="text" style="width: 250px" id="c3"/> <br />
 	Override container class <input type="text" style="width: 250px" id="c4"/> <br />
 	<hr>
@@ -432,11 +450,14 @@
 	<input type="button" value="Select item by value (US)" onclick='$("#methods").data("clicInputSelect").selectitembyvalue("US")' /><br />
 	<input type="button" value="Select item by display (Canada)" onclick='$("#methods").data("clicInputSelect").selectitembydisplay("Canada")' /><br />
 
-	<input type="button" value="Enable" onclick='$("#methods").data("clicInputSelect").fooPublic()' />
-	<input type="button" value="Disable" onclick='$("#methods").data("clicInputSelect").fooPublic()' />
-	<input type="button" value="Readonly" onclick='$("#methods").data("clicInputSelect").fooPublic()' />
-	<input type="button" value="Get Value" onclick='$("#methods").data("clicInputSelect").fooPublic()' />
-	<input type="button" value="Get Item" onclick='$("#methods").data("clicInputSelect").fooPublic()' /><br /><br />
+	<input type="button" value="Enable" onclick='$("#methods").data("clicInputSelect").enable(true)' />
+	<input type="button" value="Disable" onclick='$("#methods").data("clicInputSelect").enable(false)' />
+	<input type="button" value="Set Read only " onclick='$("#methods").data("clicInputSelect").readonly(true)' />
+	<input type="button" value="Remove Read only" onclick='$("#methods").data("clicInputSelect").readonly(false)' />
+	<input type="button" value="Get Display" onclick='ShowDisplay()' />
+	<input type="button" value="Get Value" onclick='ShowValue()' />
+	<input type="button" value="Get Item" onclick='ShowItem()' />
+	<input type="button" value="Get Index" onclick='ShowIndex()' /><br /><br />
 
  	<input type="text" style="width: 250px" id="methods"/>
 	<hr>
