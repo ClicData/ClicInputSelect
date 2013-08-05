@@ -263,94 +263,71 @@
 			
 		 $("#a1").clicInputSelect({dataSource: tArrayString});
 		 $("#a2").clicInputSelect({dataSource: tArrayNumber});
-		 $("#a3").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", dataSourceValueProperty: "code"});
+		 $("#a3").clicInputSelect({dataSource: tCountries});
 	 
-		 $("#b1").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", buttonDisplay: false});
-		 $("#b2").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", itemTemplate: function(item) { return '<div class="user"><img src="https://www.cia.gov/library/publications/the-world-factbook/graphics/flags/large/' + item.code.toLowerCase() + '-lgflag.gif" style="height:20px; width: 20px;" /><span>' + item.name + '</span></div>'; }});
-		 $("#b3").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", emptyText:'Select something...'});
-		 $("#b4").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name"});
-		 $("#b5").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", dropdownPanelWidth: "500px"});
-		 $("#b6").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", dropdownPanelWidth: "100%"});
-		 $("#b7").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", dropdownPanelHeight: "100px"});
-		 $("#b8").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", positionOffsetY: -32, positionOffsetX:280});
+		 $("#b1").clicInputSelect({dataSource: tCountries, buttonDisplay: false});
+		 $("#b2").clicInputSelect({dataSource: tCountries, itemTemplate: function(item) { return '<div class="user"><img src="https://www.cia.gov/library/publications/the-world-factbook/graphics/flags/large/' + item.code.toLowerCase() + '-lgflag.gif" style="height:20px; width: 20px;" /><span>' + item.name + '</span></div>'; }});
+		 $("#b3").clicInputSelect({dataSource: tCountries, emptyText:'Select something...'});
+		 $("#b4").clicInputSelect({dataSource: tCountries});
+		 $("#b5").clicInputSelect({dataSource: tCountries});
 		 
-		 $("#c1").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", buttonIconOpenClass:'icon-sun', buttonIconCloseClass:'icon-moon'});
-		 $("#c3").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name"});
-		 $("#c4").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name"});
+		 $("#c1").clicInputSelect({dataSource: tCountries, buttonIconOpenClass:'icon-sun', buttonIconCloseClass:'icon-moon'});
+		 $("#c2").clicInputSelect({dataSource: tCountries, positionOffsetY: -32, positionOffsetX:280});
+		 $("#c3").clicInputSelect({dataSource: tCountries});
+		 $("#c4").clicInputSelect({dataSource: tCountries});
 		 
-		 $("#w1").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name"});
-		 $("#w2").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", itemOverflow: "nowrap"});
-		 $("#w3").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", itemOverflow: "nowraptrim"});
+		 $("#w1").clicInputSelect({dataSource: tCountries});
+		 $("#w2").clicInputSelect({dataSource: tCountries});
+		 
+		 $("#f1").clicInputSelect({dataSource: tCountries});
+		 $("#f2").clicInputSelect({dataSource: tCountries});
+		 $("#f3").clicInputSelect({dataSource: tCountries});
+		 $("#f4").clicInputSelect({dataSource: tCountries});
+		 $("#f5").clicInputSelect({dataSource: tCountries});
+		 
+		 $("#methods").clicInputSelect({dataSource: tCountries});
+		 
+		 $("#events").clicInputSelect({dataSource: tCountries, onItemSelected: onItemSelected, onListOpen: onListOpen, onListClose: onListClose, onInputChange: onInputChange});
 
-		 $("#h1").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", filterHighlightMatches: false});
-		 $("#h2").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", filterHighlightClass: "myownhighlightclass"});
+		 $("#t1").clicInputSelect({dataSource: tCountries});
+		 $("#t2").clicInputSelect({dataSource: tCountries});
+		 $("#t3").clicInputSelect({dataSource: tCountries});
 		 
-		 $("#f1").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", minNumberChars: $("#maxNumberChars").val() });
-		 $("#f2").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", filterCaseSensitive: false});
-		 $("#f3").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", filterCaseSensitive: true});
-		 $("#f4").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", filterMethod: "contains"});
-		 $("#f5").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", filterMethod: "startswith"});
-		 $("#f6").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", filterMethod: "startswith", filterCaseSensitive: true});
 		 
-		 $("#methods").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", dataSourceValueProperty: "code"});
-		 DemoInitEvent();
+		 // Event handlers
+		 function onItemSelected(item){
+			$("#eventviewer").html($("#eventviewer").html() + "<br />Item '" + item.name + "' selected");
+		 }
 
-		 $("#t1").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name"});
-		 $("#t2").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name"});
-		 $("#t3").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name"});
+ 		 function onListOpen(){
+			$("#eventviewer").html($("#eventviewer").html() + "<br />Dropdown list opened");
+		 }
+
+ 		 function onListClose(){
+			$("#eventviewer").html($("#eventviewer").html() + "<br />Dropdown list closed");
+		 }
 		 
+		 function onInputChange(value)
+		 {
+			$("#eventviewer").html($("#eventviewer").html() + "<br />Input value has changed to  '" + value + "'");
+		 }
 		 
 
-
-		 
-		 
 	});
-	
-	
-	 // Sample page stuff	
-	 function DemoInitEvent(){
-		$("#events").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", onInit: onInit, onDestroy:onDestroy, onItemSelected: onItemSelected, onListOpen: onListOpen, onListClose: onListClose, onInputChange: onInputChange});
-	 }
-	 
-	 // Event handlers
-	 function onInit(item){
-		$("#eventviewer").html($("#eventviewer").html() + "<br />onItemInit : Initialized");
-	 }
-	 function onItemSelected(item){
-		$("#eventviewer").html($("#eventviewer").html() + "<br />onItemSeleted : Item '" + item.name + "' selected");
-	 }
-
-	 function onListOpen(){
-		$("#eventviewer").html($("#eventviewer").html() + "<br />onListOpen : Dropdown list opened");
-	 }
-
-	 function onListClose(){
-		$("#eventviewer").html($("#eventviewer").html() + "<br />onListClose : Dropdown list closed");
-	 }
-	 
-	 function onInputChange(value)
-	 {
-		$("#eventviewer").html($("#eventviewer").html() + "<br />onInputChange : Input value has changed to  '" + value + "'");
-	 }
-	  function onDestroy()
-	 {
-		$("#eventviewer").html($("#eventviewer").html() + "<br />onDestroy : Input value destroyed");
-	 }
-	 
-	 $("#maxNumberChars").on("change",function(){		 
-		$("#f1").clicInputSelect("option","minNumberChars", $("#maxNumberChars").val());
-	 });
   </script>
   
   
   <style>
-  .myownhighlightclass{
-		color: red;					
-		background: yellow;
-		font-size:22px;
+  .InputStyleForOne{
+	height:25px;
+	border: 1px solid green;
+	font-size: 16px;
   }
 
- 
+  .InputStyleForTwo{
+	height:25px;
+	border: 1px solid red;
+  }
   </style>
   
   </head>
@@ -365,13 +342,10 @@
 	 $(selector).clicInputSelect()<br />
 	<h1>To do</h1>
 	<ul>
-	<li>Discuss: Templated input should be anohter control not this one</li>
-	<li>Discuss: Templated input should be anohter control not this one</li>
-	<li>Auto-complete on template specify property</li>
-	<li>Discuss: Highlight on template	- Usefulness of this???</li>
-	<li>Get value, set value are done just sample page examples</li>
-	<li>Enable/disable/readonly</li>
-	<li>Discuss: Override classes ?</li>
+	<li>Passed default Selected Item</li>
+	<li>Auto-complete on template</li>
+	<li>Highlight on template</li>
+	<li>Position float and absolute...</li>
 	
 	</ul>
 	
@@ -383,42 +357,33 @@
 	<hr>
 	Default (array string) <input type="text" style="width: 250px" id="a1"/> <br />
 	Default (array numbers) <input type="text" style="width: 250px" id="a2"/> <br />
-	Default (array objects) with properties for display and values <input type="text" style="width: 250px" id="a3"/> <br />
+	Default (JSON) <input type="text" style="width: 250px" id="a3"/> <br />
 	<hr>
 	No button <input type="text" style="width: 250px" id="b1"/> <br />
 	Templated items <input type="text" style="width: 400px" id="b2"/> <br />
 	Placeholder text <input type="text" style="width: 250px" id="b3"/> <br />
-	Width and Height of input <input type="text" style="width: 250px; height: 40px;" id="b4"/> <br />
-	Dropdown Panel Width to fixed size <input type="text" style="width: 250px; height: 40px;" id="b5"/> <br />
-	Dropdown Panel Width to 100% size <input type="text" style="width: 250px; font-size: 24px;" id="b6"/> <br />
-	Dropdown Panel Height to fixed size <input type="text" style="width: 250px; font-size: 24px;" id="b7"/> <br />
-	Dropdown panel offset <input type="text" style="width: 250px" id="b8"/> <br />
+	Width and Height <input type="text" style="width: 250px; height: 40px;" id="b4"/> <br />
+	Font size <input type="text" style="width: 250px; font-size: 24px;" id="b5"/> <br />
 	<hr>
-	Default item text overflow behaviour (wrap) <input type="text" style="width: 90px" id="w1"/> <br />
-	Don't wrap item text add scrollbar <input type="text" style="width: 90px" id="w2"/> <span style="color: red">Bug: Hover selection is cut off</span><br />
-	Don't wrap item text no scrollbar/truncate text  <input type="text" style="width: 90px" id="w3"/> <br />
+	Wrap list items <input type="text" style="width: 90px" id="w1"/> <br />
+	Don't wrap list items <input type="text" style="width: 90px" id="w2"/> <br />
 	<hr>
 	Override button classes<input type="text" style="width: 250px" id="c1"/> <br />
-	Override button class <input type="text" style="width: 250px" id="c3"/> <br />
-	Override container class <input type="text" style="width: 250px" id="c4"/> <br />
+	Dropdown panel offset <input type="text" style="width: 250px" id="c2"/> <br />
+	Dropdown panel width <input type="text" style="width: 250px" id="c3"/> <br />
+	Dropdown panel height <input type="text" style="width: 250px" id="c4"/> <br />
 	<hr>
-	Filter minimum number of characters <input type="text" style="width: 250px" id="f1"/>	number of characters <input id="maxNumberChars" type="number" value="3"/><br />
+	Filter minimum number of characters <input type="text" style="width: 250px" id="f1"/> <br />
 	Filter case insensitive <input type="text" style="width: 250px" id="f2"/> <br />
 	Filter case sensitive <input type="text" style="width: 250px" id="f3"/> <br />
-	Filter contains<input type="text" style="width: 250px" id="f4"/> <br />
-	Filter starts with  <input type="text" style="width: 250px" id="f5"/> <br />
-	Filter starts with + case sensitive <input type="text" style="width: 250px" id="f6"/> <br />	
-	<hr>
-	Highlight disabled  <input type="text" style="width: 250px" id="h1"/> <br />
-	Highlight class override <input type="text" style="width: 250px" id="h2"/> <br />	
+	Filter starts with <input type="text" style="width: 250px" id="f4"/> <br />
+	Filter contains <input type="text" style="width: 250px" id="f5"/> <br />	
 	<hr>
 	Methods:  <br />
 	<input type="button" value="Open list" onclick='$("#methods").data("clicInputSelect").openlist()' />
 	<input type="button" value="Close list" onclick='$("#methods").data("clicInputSelect").closelist()' />
-	<input type="button" value="Select item by index (3)" onclick='$("#methods").data("clicInputSelect").selectitembyindex(3)' />
-	<input type="button" value="Select item by value (US)" onclick='$("#methods").data("clicInputSelect").selectitembyvalue("US")' /><br />
-	<input type="button" value="Select item by display (Canada)" onclick='$("#methods").data("clicInputSelect").selectitembydisplay("Canada")' /><br />
-
+	<input type="button" value="Select 3rd item by index" onclick='$("#methods").data("clicInputSelect").fooPublic()' />
+	<input type="button" value="Select Canada item by value" onclick='$("#methods").data("clicInputSelect").fooPublic()' /><br />
 	<input type="button" value="Enable" onclick='$("#methods").data("clicInputSelect").fooPublic()' />
 	<input type="button" value="Disable" onclick='$("#methods").data("clicInputSelect").fooPublic()' />
 	<input type="button" value="Readonly" onclick='$("#methods").data("clicInputSelect").fooPublic()' />
@@ -428,9 +393,7 @@
  	<input type="text" style="width: 250px" id="methods"/>
 	<hr>
 	Events: 
-	<input type="text" style="width: 250px" id="events"/> <br />
-	<input type="button" value="Destroy" onclick='$("#events").data("clicInputSelect").destroy()'/>
-	<input type="button" value="Init" onclick='DemoInitEvent();'/>
+	<input type="text" style="width: 250px" id="events"/> 
 	<div id="eventviewer" style="border:1px solid green; position:relative; left: 350px; top:-45px; width:400px; height:200px; overflow: auto;">
 		Work with clicInputSelect to see events here...
 	</div>
