@@ -269,6 +269,7 @@
 		 $("#b2").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", itemTemplate: function(item) { return '<div class="user"><img src="https://www.cia.gov/library/publications/the-world-factbook/graphics/flags/large/' + item.code.toLowerCase() + '-lgflag.gif" style="height:50px; width: 50px;" /><span style="display: none">' + item.name + '</span></div>'; }});
 		 $("#b3").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", emptyText:'Select something...'});
 		 $("#b4").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name"});
+		 $("#b4a").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name"});
 		 $("#b5").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", dropdownPanelWidth: "500px"});
 		 $("#b6").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", dropdownPanelWidth: "100%"});
 		 $("#b7").clicInputSelect({dataSource: tCountries, dataSourceDisplayProperty: "name", dropdownPanelHeight: "100px"});
@@ -418,6 +419,11 @@
 	Templated items <input type="text" style="width: 400px" id="b2"/> <br />
 	Placeholder text <input type="text" style="width: 250px" id="b3"/> <br />
 	Width and Height of input <input type="text" style="width: 450px; height: 40px;" id="b4"/> <br />
+	
+	<div style="border: 1px solid red; width: 500px;">
+	Width calculated (Nico's issue)
+		 <input type="text" style="width: calc(100% - 80px);" id="b4a"/> 
+	</div>
 	Dropdown Panel Width to fixed size <input type="text" style="width: 250px;" id="b5"/> <br />
 	Dropdown Panel Width to 100% size <input type="text" style="width: 250px; " id="b6"/> <br />
 	Dropdown Panel Height to fixed size <input type="text" style="width: 250px;" id="b7"/> <br />
