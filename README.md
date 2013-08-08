@@ -12,7 +12,7 @@ Then create it like any other jquery control...
 ```html
 <script>
   $(document).ready(function () {
-	  $('#simple').ClicInputSelect();
+	  $('#simple').clicInputSelect();
   });
 </script>
 <input id="simple" type="text" />
