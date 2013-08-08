@@ -365,6 +365,10 @@
   
   
   <style>
+  body
+  {
+  background-color: pink;
+  }
   .myownhighlightclass{
 		color: red;					
 		background: yellow;
@@ -421,8 +425,10 @@
 	Width and Height of input <input type="text" style="width: 450px; height: 40px;" id="b4"/> <br />
 	
 	<div style="border: 1px solid red; width: 500px;">
+		<div style="border: 1px solid red; width: 80%;">
 	Width calculated (Nico's issue)
 		 <input type="text" style="width: calc(100% - 80px);" id="b4a"/> 
+	    </div>
 	</div>
 	Dropdown Panel Width to fixed size <input type="text" style="width: 250px;" id="b5"/> <br />
 	Dropdown Panel Width to 100% size <input type="text" style="width: 250px; " id="b6"/> <br />

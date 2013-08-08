@@ -41,7 +41,8 @@
 		}
 		
 		// Take the width from input and put it in container
-		tContainer.css("width",$el.width());
+		tContainer.css("width",$el.css("width"));
+		tContainer.css("background-color",$el.css("background-color"));
 		
 		// Wrap original input in clicinputselect container
 		$el.wrap(tContainer);
@@ -58,9 +59,9 @@
 			}
 			$el.after(tDropdownButton);
 			// Only sure fire way of vertically centering the icon in button is code.  All others fail (vertical-align, flex, line-height: 100%, etc...)
-			tDropdownButton.append('<i class="' + options.buttonIconOpenClass + '" style="line-height: ' + tDropdownButton.height() + 'px;"></i>');
+			tDropdownButton.append('<i class="' + options.buttonIconOpenClass + '" style="line-height: ' + tDropdownButton.css("height") + ';"></i>');
 			// Set the width for the input based on 100% - width of the button (as specified in class)
-			$el.css("width","calc(100% - " + $(tDropdownButton).width() + "px)");
+			$el.css("width","calc(100% - " + $(tDropdownButton).css("width") + ")");
 		}
 		else
 		{
